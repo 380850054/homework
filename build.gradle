@@ -11,7 +11,12 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
+	maven { url 'https://maven.aliyun.com/repository/google/' }
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/jcenter/' }
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin/' } 
 	mavenCentral()
+	
 }
 
 dependencies {
@@ -22,6 +27,10 @@ dependencies {
 	// tag::tests[]
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	// end::tests[]
+
+	implementation 'org.postgresql:postgresql:42.6.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.4.5'
+
 }
 
 test {

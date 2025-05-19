@@ -1,14 +1,11 @@
-package com.example.springboot;
+package com.sanofi;
 
-import java.util.Arrays;
-
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+// @EnableJpaRepositories(basePackages = "com.sanofi.repository")
+// @EntityScan(basePackages={"com.sanofi.model"})
 public class Application {
 
 	public static void main(String[] args) {
