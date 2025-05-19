@@ -1,0 +1,19 @@
+<module name="Checker">
+    <property name="charset" value="UTF-8" />
+    <!-- 检查文件的长度（行） default max=2000 -->
+    <module name="FileLength">
+        <property name="max" value="2500" />
+    </module>
+
+    <module name="TreeWalker">
+        <!---
+        字符串比较必须使用 equals() -->
+        <module name="StringLiteralEquality">
+        </module>
+
+        <!-- 每行字符数 -->
+        <module name="LineLength">
+            <property name="max" value="200" />
+        </module>
+    </module>
+</module>

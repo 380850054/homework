@@ -1,0 +1,33 @@
+plugins {
+	id 'org.springframework.boot' version '3.3.0'
+	id 'java'
+	id 'checkstyle'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.homework'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// tag::actuator[]
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	// end::actuator[]
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// tag::tests[]
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	// end::tests[]
+}
+
+test {
+	useJUnitPlatform()
+}
+
+checkstyle {
+	configFile = file('config/checkstyle/checkstyle.xml')
+}
