@@ -1,14 +1,15 @@
 package com.sanofi.model;
 
+import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,26 +28,18 @@ public class Prescription {
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
 
-    @ManyToOne
-    @JoinColumn(name = "drug_id", referencedColumnName = "id")
-    private Drug drug;
-
-    @Column(name = "dosage")
-    private String dosage;
-
-    @Column(name = "frequency")
-    private String frequency;
+    @OneToMany
+    @JoinColumn(name = "dosage_id", referencedColumnName = "id")
+    private List<Dosage> dosages;
 
     // Constructors
     public Prescription() {
     }
 
-    public Prescription(Pharmacy pharmacy, Patient patient, Drug drug, String dosage, String frequency) {
+    public Prescription(Pharmacy pharmacy, Patient patient, List<Dosage> dosages) {
         this.pharmacy = pharmacy;
         this.patient = patient;
-        this.drug = drug;
-        this.dosage = dosage;
-        this.frequency = frequency;
+        this.dosages = dosages;
     }
 
     // Getters and Setters
@@ -74,30 +67,6 @@ public class Prescription {
         this.patient = patient;
     }
 
-    public Drug getDrug() {
-        return drug;
-    }
-
-    public void setDrug(Drug drug) {
-        this.drug = drug;
-    }
-
-    public String getDosage() {
-        return dosage;
-    }
-
-    public void setDosage(String dosage) {
-        this.dosage = dosage;
-    }
-
-    public String getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
-    }
-
     // Equals and HashCode
     @Override
     public boolean equals(Object o) {
@@ -107,14 +76,12 @@ public class Prescription {
         return Objects.equals(id, that.id) &&
                 Objects.equals(pharmacy, that.pharmacy) &&
                 Objects.equals(patient, that.patient) &&
-                Objects.equals(drug, that.drug) &&
-                Objects.equals(dosage, that.dosage) &&
-                Objects.equals(frequency, that.frequency);
+                Objects.equals(dosages, that.dosages);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pharmacy, patient, drug, dosage, frequency);
+        return Objects.hash(id, pharmacy, patient, dosages);
     }
 
     // toString
@@ -124,9 +91,7 @@ public class Prescription {
                 "id=" + id +
                 ", pharmacy=" + pharmacy +
                 ", patient=" + patient +
-                ", drug=" + drug +
-                ", dosage='" + dosage + '\'' +
-                ", frequency='" + frequency + '\'' +
+                ", dosages='" + dosages +
                 '}';
     }
 }

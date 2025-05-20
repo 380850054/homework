@@ -1,48 +1,45 @@
 package com.sanofi.model;
 
+import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "pharmacy_drug_contract")
 public class PharmacyDrugContract {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private Integer id;
 
-    @ManyToOne
-    @MapsId("pharmacyId")
+    @OneToOne
     @JoinColumn(name = "pharmacy_id", referencedColumnName = "id")
     private Pharmacy pharmacy;
 
-    @ManyToOne
-    @MapsId("drugId")
+    @OneToMany
     @JoinColumn(name = "drug_id", referencedColumnName = "id")
-    private Drug drug;
+    private List<Drug> drugs;
 
     // Constructors, getters, and setters
 
     public PharmacyDrugContract() {
     }
 
-    public PharmacyDrugContract(Pharmacy pharmacy, Drug drug) {
+    public PharmacyDrugContract(Pharmacy pharmacy, List<Drug> drugs) {
         this.pharmacy = pharmacy;
-        this.drug = drug;
+        this.drugs = drugs;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Pharmacy getPharmacy() {
@@ -53,11 +50,12 @@ public class PharmacyDrugContract {
         this.pharmacy = pharmacy;
     }
 
-    public Drug getDrug() {
-        return drug;
+    public List<Drug> getDrugs() {
+        return drugs;
     }
 
-    public void setDrug(Drug drug) {
-        this.drug = drug;
+    public void setDrugs(List<Drug> drugs) {
+        this.drugs = drugs;
     }
+
 }

@@ -3,7 +3,8 @@ CREATE TABLE drug (
     name VARCHAR(100) NOT NULL,
     manufacturer VARCHAR(100),
     batch_number VARCHAR(50),
-    expiry_date VARCHAR(50)
+    expiry_date VARCHAR(50),
+    stock DOUBLE,
 );
 
 CREATE TABLE patient (
@@ -14,7 +15,6 @@ CREATE TABLE patient (
 CREATE TABLE pharmacy (
     id INT AUTO_INCREMENT PRIMARY KEY,
     drug_id INT NOT NULL,
-    inventory INT NOT NULL DEFAULT 0,
     FOREIGN KEY (drug_id) REFERENCES drugs(id)
 );
 
@@ -25,10 +25,19 @@ CREATE TABLE prescription (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     pharmacy_id INT,
     patient_id INT,
-    drug_id INT,
-    dosage VARCHAR(255),
-    frequency VARCHAR(255),
+    dosage_id INT,
     FOREIGN KEY (pharmacy_id) REFERENCES pharmacy(Id),
     FOREIGN KEY (patient_id) REFERENCES patient(Id),
-    FOREIGN KEY (drug_id) REFERENCES drug(Id)
+    FOREIGN KEY (dosage_id) REFERENCES dosage(Id)
+);
+
+CREATE TABLE pharmacy_drug_contract (
+    FOREIGN KEY (pharmacy_id) REFERENCES pharmacy(Id),
+    drug_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE dosage (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    drug_name VARCHAR(100) NOT NULL,
+    usage VARCHAR(100) NOT NULL
 );

@@ -1,6 +1,7 @@
 package com.sanofi.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,7 +22,7 @@ public class AuditLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "prescription_id", referencedColumnName = "id")
     private Prescription prescription;
 
@@ -31,9 +34,9 @@ public class AuditLog {
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
 
-    @ManyToOne
+    @OneToMany
     @JoinColumn(name = "drug_id", referencedColumnName = "id")
-    private Drug drug;
+    private List<Drug> drugs;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
@@ -81,12 +84,12 @@ public class AuditLog {
         this.patient = patient;
     }
 
-    public Drug getDrug() {
-        return drug;
+    public List<Drug> getDrugs() {
+        return drugs;
     }
 
-    public void setDrug(Drug drug) {
-        this.drug = drug;
+    public void setDrugs(List<Drug> drugs) {
+        this.drugs = drugs;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -121,7 +124,7 @@ public class AuditLog {
                 ", prescription=" + prescription +
                 ", pharmacy=" + pharmacy +
                 ", patient=" + patient +
-                ", drug=" + drug +
+                ", drugs=" + drugs +
                 ", createdAt=" + createdAt +
                 ", isSuccess=" + isSuccess +
                 ", failureReasons='" + failureReasons + '\'' +

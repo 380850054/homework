@@ -14,6 +14,33 @@ public class Drug {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "manufacturer")
+    private String manufacturer;
+
+    @Column(name = "batch_number")
+    private String batchNumber;
+
+    @Column(name = "expiry_date")
+    private String expiryDate;
+
+    @Column(name = "stock")
+    private double stock;
+
+    // Constructors
+    public Drug() {
+    }
+
+    public Drug(String name, String manufacturer, String batchNumber, String expiryDate, double stock) {
+        this.name = name;
+        this.manufacturer = manufacturer;
+        this.batchNumber = batchNumber;
+        this.expiryDate = expiryDate;
+        this.stock = stock;
+    }
+
     public Long getId() {
         return id;
     }
@@ -21,9 +48,6 @@ public class Drug {
     public void setId(Long id) {
         this.id = id;
     }
-
-    @Column(name = "name")
-    private String name;
 
     public String getName() {
         return name;
@@ -33,9 +57,6 @@ public class Drug {
         this.name = name;
     }
 
-    @Column(name = "manufacturer")
-    private String manufacturer;
-
     public String getManufacturer() {
         return manufacturer;
     }
@@ -43,9 +64,6 @@ public class Drug {
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
-
-    @Column(name = "batch_number")
-    private String batchNumber;
 
     public String getBatchNumber() {
         return batchNumber;
@@ -55,9 +73,6 @@ public class Drug {
         this.batchNumber = batchNumber;
     }
 
-    @Column(name = "expiry_date")
-    private String expiryDate;
-
     public String getExpiryDate() {
         return expiryDate;
     }
@@ -66,15 +81,12 @@ public class Drug {
         this.expiryDate = expiryDate;
     }
 
-    // Constructors
-    public Drug() {
+    public double getStock() {
+        return stock;
     }
 
-    public Drug(String name, String manufacturer, String batchNumber, String expiryDate) {
-        this.name = name;
-        this.manufacturer = manufacturer;
-        this.batchNumber = batchNumber;
-        this.expiryDate = expiryDate;
+    public void setStock(double stock) {
+        this.stock = stock;
     }
 
 }

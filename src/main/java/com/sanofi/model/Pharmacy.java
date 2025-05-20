@@ -1,9 +1,10 @@
 package com.sanofi.model;
-import jakarta.persistence.Column;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -13,21 +14,17 @@ public class Pharmacy {
     @Id
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "drug_id", referencedColumnName = "id", nullable = false)
-    private Drug drug;
-
-    @Column(name = "inventory")
-    private Integer inventory;
+    @OneToMany
+    @JoinColumn(name="drug_id", referencedColumnName = "id")
+    private List<Drug> drugs;
 
     // Constructors
     public Pharmacy() {
     }
 
-    public Pharmacy(Long id, Drug drug, Integer inventory) {
+    public Pharmacy(Long id, List<Drug> drugs) {
         this.id = id;
-        this.drug = drug;
-        this.inventory = inventory;
+        this.drugs = drugs;
     }
 
     // Getters and Setters
@@ -39,20 +36,11 @@ public class Pharmacy {
         this.id = id;
     }
 
-    public Drug getDrug() {
-        return drug;
+    public List<Drug> getDrugs() {
+        return drugs;
     }
 
-    public void setDrug(Drug drug) {
-        
+    public void setDrugs(List<Drug> drugs) {
+        this.drugs = drugs;
     }
-
-    public Integer getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(Integer inventory) {
-        this.inventory = inventory;
-    }
-
 }

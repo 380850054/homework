@@ -1,21 +1,16 @@
 package com.sanofi.request;
 
+import java.util.List;
+
+
 public class PurchaseRequest {
-
+    
     private Long pharmacyId;
-    private String drugName;
-    private String manufacturer;
-    private String batchNumber;
-    private String expiryDate;
-    private Integer stock;
+    private List<DrugRequest> drugs;
 
-    public PurchaseRequest(Long pharmacyId, String drugName, String manufacturer, String batchNumber, String expiryDate, Integer stock) {
+    public PurchaseRequest(Long pharmacyId, List<DrugRequest> drugs) {
         this.pharmacyId = pharmacyId;
-        this.drugName = drugName;
-        this.manufacturer = manufacturer;
-        this.batchNumber = batchNumber;
-        this.expiryDate = expiryDate;
-        this.stock = stock;
+        this.drugs = drugs;
     }
 
     public PurchaseRequest() {
@@ -30,44 +25,12 @@ public class PurchaseRequest {
         this.pharmacyId = pharmacyId;
     }
 
-    public String getDrugName() {
-        return drugName;
+    public List<DrugRequest> getDrugs() {
+        return drugs;
     }
 
-    public void setDrugName(String drugName) {
-        this.drugName = drugName;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getBatchNumber() {
-        return batchNumber;
-    }
-
-    public void setBatchNumber(String batchNumber) {
-        this.batchNumber = batchNumber;
-    }
-
-    public String getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(String expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
+    public void setDrugs(List<DrugRequest> drugs) {
+        this.drugs = drugs;
     }
 
 }
