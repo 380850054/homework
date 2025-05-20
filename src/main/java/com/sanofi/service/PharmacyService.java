@@ -22,7 +22,6 @@ import com.sanofi.repository.PatientRepository;
 import com.sanofi.repository.PharmacyDrugContractRepository;
 import com.sanofi.repository.PharmacyRepository;
 import com.sanofi.request.CreatePrescriptionRequest;
-import com.sanofi.request.DrugRequest;
 import com.sanofi.request.PurchaseRequest;
 import com.sanofi.response.CreatePrescriptionResponse;
 import com.sanofi.response.DrugResponse;
@@ -57,31 +56,28 @@ public class PharmacyService {
 
     public ResponseEntity<String> purchase(PurchaseRequest purchaseRequest) {
         try {
-            List<Drug> drugs = new ArrayList<>();
+            Optional<Pharmacy> pharmacyOptional = this.pharmacyRepository.findById(purchaseRequest.getPharmacyId());
+            if (pharmacyOptional.isEmpty()) {
+                return new ResponseEntity<>("Pharmacy not found for: " + purchaseRequest.getPharmacyId(), HttpStatus.NOT_FOUND);
+            }
 
-            Pharmacy pharmacy = new Pharmacy(
-                purchaseRequest.getPharmacyId(),
-                drugs
-            );
+            Pharmacy pharmacy = pharmacyOptional.get();
 
-            pharmacyRepository.save(pharmacy);
-
-            for (DrugRequest drugRequest: purchaseRequest.getDrugs()) {
-                drugs.add(new Drug(
+            List<Drug> drugs = purchaseRequest.getDrugs().stream().map(drugRequest -> {
+                return new Drug(
                     drugRequest.getDrugName(),
                     drugRequest.getManufacturer(),
                     drugRequest.getBatchNumber(),
                     drugRequest.getExpiryDate(),
                     drugRequest.getStock(),
                     pharmacy
-                ));
-            }
-
+                );
+            }).collect(Collectors.toList());
             drugRepository.saveAll(drugs);
 
-            return new ResponseEntity<>("add stocks successful", HttpStatus.OK);
+            return new ResponseEntity<>("Add stocks successful", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("add stocks failed", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Add stocks failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
