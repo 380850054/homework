@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -29,16 +31,21 @@ public class Drug {
     @Column(name = "stock")
     private double stock;
 
+    @ManyToOne
+    @JoinColumn(name = "pharmacy_id", referencedColumnName = "id")
+    private Pharmacy pharmacy;
+
     // Constructors
     public Drug() {
     }
 
-    public Drug(String name, String manufacturer, String batchNumber, String expiryDate, double stock) {
+    public Drug(String name, String manufacturer, String batchNumber, String expiryDate, double stock, Pharmacy pharmacy) {
         this.name = name;
         this.manufacturer = manufacturer;
         this.batchNumber = batchNumber;
         this.expiryDate = expiryDate;
         this.stock = stock;
+        this.pharmacy = pharmacy;
     }
 
     public Long getId() {
@@ -87,6 +94,14 @@ public class Drug {
 
     public void setStock(double stock) {
         this.stock = stock;
+    }
+
+    public Pharmacy getPharmacy() {
+        return pharmacy;
+    }
+
+    public void setPharmacy(Pharmacy pharmacy) {
+        this.pharmacy = pharmacy;
     }
 
 }

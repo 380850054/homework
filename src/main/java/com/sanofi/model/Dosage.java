@@ -21,13 +21,17 @@ public class Dosage {
     @Column(name = "usage", nullable = false, length = 100)
     private String usage;
 
+    @Column(name = "stock", nullable = false)
+    private double stock;
+
     // Constructors
     public Dosage() {
     }
 
-    public Dosage(String usage, String drugName) {
+    public Dosage(String usage, String drugName, double stock) {
         this.usage = usage;
         this.drugName = drugName;
+        this.stock = stock;
     }
 
     public Long getId() {
@@ -48,6 +52,14 @@ public class Dosage {
 
     public void setUsage(String usage) {
         this.usage = usage;
+    }
+
+    public double getStock() {
+        return stock;
+    }
+
+    public void setStock(double stock) {
+        this.stock = stock;
     }
 
 }

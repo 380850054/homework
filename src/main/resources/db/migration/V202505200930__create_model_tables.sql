@@ -5,6 +5,7 @@ CREATE TABLE drug (
     batch_number VARCHAR(50),
     expiry_date VARCHAR(50),
     stock DOUBLE,
+    FOREIGN KEY (pharmacy_id) REFERENCES pharmacy(Id)
 );
 
 CREATE TABLE patient (
