@@ -19,7 +19,6 @@ Thumbs.db
 
 # 忽略日志和数据库文件
 *.log
-*.sql
 *.sqlite
 
 

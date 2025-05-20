@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,8 +16,9 @@ public class Pharmacy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "drug_id")
-    private Long drugId;
+    @ManyToOne
+    @JoinColumn(name = "drug_id", referencedColumnName = "id", nullable = false)
+    private Drug drug;
 
     @Column(name = "inventory")
     private Integer inventory;
@@ -24,9 +27,8 @@ public class Pharmacy {
     public Pharmacy() {
     }
 
-    public Pharmacy(Long id, Long drugId, Integer inventory) {
-        this.id = id;
-        this.drugId = drugId;
+    public Pharmacy(Drug drug, Integer inventory) {
+        this.drug = drug;
         this.inventory = inventory;
     }
 
@@ -39,12 +41,12 @@ public class Pharmacy {
         this.id = id;
     }
 
-    public Long getDrugId() {
-        return drugId;
+    public Drug getDrug() {
+        return drug;
     }
 
-    public void setDrugId(Long drugId) {
-        this.drugId = drugId;
+    public void setDrug(Drug drug) {
+        
     }
 
     public Integer getInventory() {
