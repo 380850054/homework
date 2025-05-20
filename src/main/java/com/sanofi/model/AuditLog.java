@@ -1,7 +1,6 @@
 package com.sanofi.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -34,12 +32,14 @@ public class AuditLog {
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
 
-    @OneToMany
-    @JoinColumn(name = "drug_id", referencedColumnName = "id")
-    private List<Drug> drugs;
-
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
+
+    @Column(name = "drug_dispensed")
+    private Double drugDispensed;
+
+    @Column(name = "drug_name")
+    private String drugName;
 
     @Column(name = "is_success")
     private Boolean isSuccess;
@@ -49,6 +49,17 @@ public class AuditLog {
 
     // Constructors
     public AuditLog() {
+    }
+
+    public AuditLog(Prescription prescription, Pharmacy pharmacy, Patient patient,
+            Double drugDispensed, String drugName, Boolean isSuccess, String failureReasons) {
+        this.prescription = prescription;
+        this.pharmacy = pharmacy;
+        this.patient = patient;
+        this.drugDispensed = drugDispensed;
+        this.drugName = drugName;
+        this.isSuccess = isSuccess;
+        this.failureReasons = failureReasons;
     }
 
     // Getters and Setters
@@ -84,14 +95,6 @@ public class AuditLog {
         this.patient = patient;
     }
 
-    public List<Drug> getDrugs() {
-        return drugs;
-    }
-
-    public void setDrugs(List<Drug> drugs) {
-        this.drugs = drugs;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -100,11 +103,11 @@ public class AuditLog {
         this.createdAt = createdAt;
     }
 
-    public Boolean getSuccess() {
+    public Boolean getIsSuccess() {
         return isSuccess;
     }
 
-    public void setSuccess(Boolean success) {
+    public void setIsSuccess(Boolean success) {
         isSuccess = success;
     }
 
@@ -116,18 +119,19 @@ public class AuditLog {
         this.failureReasons = failureReasons;
     }
 
-    // toString method (optional)
-    @Override
-    public String toString() {
-        return "AuditLog{" +
-                "id=" + id +
-                ", prescription=" + prescription +
-                ", pharmacy=" + pharmacy +
-                ", patient=" + patient +
-                ", drugs=" + drugs +
-                ", createdAt=" + createdAt +
-                ", isSuccess=" + isSuccess +
-                ", failureReasons='" + failureReasons + '\'' +
-                '}';
+    public String getDrugName() {
+        return drugName;
+    }
+
+    public void setDrugName(String drugName) {
+        this.drugName = drugName;
+    }
+
+    public Double getDrugDispensed() {
+        return drugDispensed;
+    }
+
+    public void setDrugDispensed(Double drugDispensed) {
+        this.drugDispensed = drugDispensed;
     }
 }

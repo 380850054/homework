@@ -4,7 +4,8 @@ CREATE TABLE audit_log (
     FOREIGN KEY (prescription_id) REFERENCES prescription(Id),
     FOREIGN KEY (pharmacy_id) REFERENCES pharmacy(Id),
     FOREIGN KEY (patient_id) REFERENCES patient(Id),
-    FOREIGN KEY (drug_id) REFERENCES drug(Id),
+    drug_dispensed DOUBLE,
+    drug_name VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_success BOOLEAN,
     failue_reasons VARCHAR(200)

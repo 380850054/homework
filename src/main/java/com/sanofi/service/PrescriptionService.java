@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sanofi.model.AuditLog;
 import com.sanofi.model.Dosage;
 import com.sanofi.model.Drug;
 import com.sanofi.model.Prescription;
@@ -23,11 +24,16 @@ public class PrescriptionService {
 
     private final PrescriptionRepository prescriptionRepository;
     private final DrugRepository drugRepository;
+    private final AuditLogService auditLogService;
 
     @Autowired
-    public PrescriptionService(PrescriptionRepository prescriptionRepository, DrugRepository drugRepository) {
-        this.prescriptionRepository = prescriptionRepository;
-        this.drugRepository = drugRepository;
+    public PrescriptionService(
+        PrescriptionRepository prescriptionRepository, 
+        DrugRepository drugRepositor,
+        AuditLogService auditLogService) {
+            this.prescriptionRepository = prescriptionRepository;
+            this.drugRepository = drugRepositor;
+            this.auditLogService = auditLogService;
     }
 
     public Long createPrescription(Prescription prescription) {
@@ -54,8 +60,7 @@ public class PrescriptionService {
             drugNames, pharmacy_id, 0, currentDate
         );
 
-        List <String> insufficientDrugs = new ArrayList<>();
-
+        List<String> insufficientDrugs = new ArrayList<>();
         for (Dosage dosage: dosages) {
             double requiredStock = dosage.getStock();
             for (Drug drug: drugs) {
@@ -74,8 +79,36 @@ public class PrescriptionService {
                 insufficientDrugs.add(dosage.getDrugName());
             }
         }
+
         if (persist) {
-            this.drugRepository.saveAll(drugs);
+            List<AuditLog> auditLogs = new ArrayList<>();
+
+            boolean isSuccess = insufficientDrugs.size() == 0;
+
+            dosages.forEach(dosage->{
+                auditLogs.add(new AuditLog(
+                    prescription,
+                    prescription.getPharmacy(),
+                    prescription.getPatient(),
+                    dosage.getStock(),
+                    dosage.getDrugName(),
+                    isSuccess,
+                    isSuccess ? null : "Insufficient stock"
+                ));
+            });
+
+            try {
+                this.drugRepository.saveAll(drugs);
+            } catch (Exception e) {
+                String failureReason = "Save to DB failed";
+                for (AuditLog auditLog: auditLogs) {
+                    auditLog.setIsSuccess(false);
+                    auditLog.setDrugDispensed(0D);
+                    auditLog.setFailureReasons(failureReason);
+                }
+            } finally {
+                this.auditLogService.saveAll(auditLogs);    
+            }
         }
 
         return insufficientDrugs;
