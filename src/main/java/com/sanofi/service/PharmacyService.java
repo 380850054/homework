@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sanofi.model.Pharmacy;
-import com.sanofi.repository.HelloRepository;
+import com.sanofi.repository.PharmacyRepository;
 
 @Service
-public class HelloService {
+public class PharmacyService {
 
-    private final HelloRepository helloRepository;
+    private final PharmacyRepository helloRepository;
 
     @Autowired
-    public HelloService(HelloRepository helloRepository) {
+    public PharmacyService(PharmacyRepository helloRepository) {
         this.helloRepository = helloRepository;
     }
 

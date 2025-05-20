@@ -3,22 +3,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sanofi.service.HelloService;
+import com.sanofi.service.PharmacyService;
 
 
 @RestController
-public class HelloController {
+public class PharmacyController {
 
-    private final HelloService helloService;
+    private final PharmacyService pharmacyService;
 
     @Autowired
-    public HelloController(HelloService helloService) {
-        this.helloService = helloService;
+    public PharmacyController(PharmacyService pharmacyService) {
+        this.pharmacyService = pharmacyService;
     }
 
     @GetMapping("/test-conn")
     public String index() {
-        return this.helloService.testConn();
+        return this.pharmacyService.testConn();
     }
 
     @GetMapping("/")

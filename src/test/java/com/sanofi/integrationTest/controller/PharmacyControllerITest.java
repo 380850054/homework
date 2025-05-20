@@ -8,16 +8,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 
-import com.sanofi.repository.HelloRepository;
+import com.sanofi.repository.PharmacyRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class HelloControllerITest {
+public class PharmacyControllerITest {
 
 	@Autowired
 	private TestRestTemplate template;
 
     @MockBean
-    private HelloRepository helloRepository;
+    private PharmacyRepository pharmacyRepository;
 
     @Test
     public void getHello() throws Exception {

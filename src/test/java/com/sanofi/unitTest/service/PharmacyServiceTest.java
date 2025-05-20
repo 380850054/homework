@@ -9,17 +9,17 @@ import static org.mockito.Mockito.when;
 
 import com.sanofi.model.Drug;
 import com.sanofi.model.Pharmacy;
-import com.sanofi.repository.HelloRepository;;
+import com.sanofi.repository.PharmacyRepository;;
 
-public class HelloServiceTest {
+public class PharmacyServiceTest {
 
 
-	private final HelloRepository helloRepository = mock(HelloRepository.class);
+	private final PharmacyRepository pharmacyRepository = mock(PharmacyRepository.class);
 
 	@Test
 	public void getHello() throws Exception {
-		when(helloRepository.findById(1L)).thenReturn(Optional.of(new Pharmacy(new Drug(),2)));
-		Optional<Pharmacy> result = helloRepository.findById(1L);
+		when(pharmacyRepository.findById(1L)).thenReturn(Optional.of(new Pharmacy(new Drug(),2)));
+		Optional<Pharmacy> result = pharmacyRepository.findById(1L);
 		result.ifPresent(pharmacy -> System.out.println("inventory: " + pharmacy.getInventory()));
 		assertEquals(result.get().getInventory(), 2);
 	}

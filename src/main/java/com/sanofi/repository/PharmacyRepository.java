@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.sanofi.model.Pharmacy;
 
 @Repository
-public interface HelloRepository extends JpaRepository<Pharmacy, Long> {
+public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 }
