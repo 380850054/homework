@@ -31,11 +31,6 @@ public class PharmacyController {
         return this.pharmacyService.purchase(request);
     }
 
-    @GetMapping("/")
-    public String hello() {
-        return "Greetings from Spring Boot!";
-    }
-
     @GetMapping("/pharmacies-and-contracted-drugs")
     public ResponseEntity<List<PharmaciesAndContractedDrugsResponse>> getPharmaciesAndContractedDrugs() {
         return this.pharmacyService.getAllPharmaciesWithContractedDrugs();

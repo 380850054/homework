@@ -1,27 +1,45 @@
 package com.sanofi.integrationTest.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.sanofi.repository.PharmacyRepository;
+import com.sanofi.response.DrugResponse;
+import com.sanofi.response.PharmaciesAndContractedDrugsResponse;
+import com.sanofi.service.PharmacyService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 public class PharmacyControllerITest {
 
 	@Autowired
-	private TestRestTemplate template;
+    private MockMvc mockMvc;
 
     @MockBean
-    private PharmacyRepository pharmacyRepository;
+    private PharmacyService pharmacyService;
 
     @Test
     public void getHello() throws Exception {
-        ResponseEntity<String> response = template.getForEntity("/", String.class);
-        assertThat(response.getBody()).isEqualTo("Greetings from Spring Boot!");
+        
+        List<PharmaciesAndContractedDrugsResponse> mockResponseBody = new ArrayList<>();
+        List<DrugResponse> drugs = new ArrayList<>();
+        mockResponseBody.add(new PharmaciesAndContractedDrugsResponse(1L, drugs));
+
+        when(this.pharmacyService.getAllPharmaciesWithContractedDrugs()).thenReturn(new ResponseEntity<>(mockResponseBody, HttpStatus.OK));
+
+        mockMvc.perform(get("/pharmacies-and-contracted-drugs"))
+        .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
