@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sanofi.request.CreatePrescriptionRequest;
 import com.sanofi.request.PurchaseRequest;
 import com.sanofi.response.CreatePrescriptionResponse;
+import com.sanofi.response.FullfillPrescriptionResponse;
 import com.sanofi.response.PharmaciesAndContractedDrugsResponse;
 import com.sanofi.service.PharmacyService;
 
@@ -42,6 +44,11 @@ public class PharmacyController {
     @PostMapping("/prescriptions")
     public ResponseEntity<CreatePrescriptionResponse> createPrescription(CreatePrescriptionRequest request) {
         return this.pharmacyService.createPrescription(request);
+    }
+
+    @PutMapping("/prescriptions")
+    public ResponseEntity<FullfillPrescriptionResponse> fullfillPrescription(Long prescription_id) {
+        return this.pharmacyService.fullfillPrescription(prescription_id);
     }
 
 }

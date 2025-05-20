@@ -67,6 +67,14 @@ public class Prescription {
         this.patient = patient;
     }
 
+    public List<Dosage> getDosages() {
+        return dosages;
+    }
+
+    public void setDosages(List<Dosage> dosages) {
+        this.dosages = dosages;
+    }
+
     // Equals and HashCode
     @Override
     public boolean equals(Object o) {

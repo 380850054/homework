@@ -1,9 +1,7 @@
 package com.sanofi.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,8 +26,8 @@ import com.sanofi.request.DrugRequest;
 import com.sanofi.request.PurchaseRequest;
 import com.sanofi.response.CreatePrescriptionResponse;
 import com.sanofi.response.DrugResponse;
+import com.sanofi.response.FullfillPrescriptionResponse;
 import com.sanofi.response.PharmaciesAndContractedDrugsResponse;
-import static com.sanofi.util.util.getCurrentDateWithFormat;
 
 @Service
 public class PharmacyService {
@@ -126,58 +124,45 @@ public class PharmacyService {
             return new ResponseEntity<>(new CreatePrescriptionResponse(false, null, failedReason) , HttpStatus.NOT_FOUND);
         }
 
-        List<String> drugNames = request.getDosages().stream().map(dosage -> dosage.getDrugName()).distinct().collect(Collectors.toList());
-
-        String currentDate = getCurrentDateWithFormat("yyyy-MM-dd");
-
-        List<Drug> drugs = drugRepository.findAllByNameInAndPharmacyIdAndStockGreaterThanAndExpiryDateGreaterThan(
-            drugNames, pharmacy_id, 0, currentDate
-            );
-        
-        Map<String, Double> drugStock = new HashMap<>();
-        drugs.stream().forEach(drug -> {
-            String drugName = drug.getName();
-            Double stock = drugStock.getOrDefault(drugName, 0D);
-            drugStock.put(drugName, stock + drug.getStock());
-        });
-
-        Map<String, Double> dosageRequiredStock = new HashMap<>();
-        request.getDosages().stream().forEach(dosage -> {
-            String drugName = dosage.getDrugName();
-            Double requiredStock = dosageRequiredStock.getOrDefault(drugName, 0D);
-            dosageRequiredStock.put(drugName, requiredStock + dosage.getStock());
-        });
-
-        List <String> insufficientDrugs = new ArrayList<>();
-
-        dosageRequiredStock.entrySet().stream().peek(entry -> {
-            double stock = drugStock.getOrDefault(entry.getKey(), 0D);
-            double requiredStock = entry.getValue();
-            String drugName = entry.getKey();
-            if(stock < requiredStock) {
-                insufficientDrugs.add(drugName);
-            }
-        });
-
-        if (insufficientDrugs.isEmpty()) {
-            List<Dosage> dosages = request.getDosages().stream().map(dosage -> new Dosage(
+        List<Dosage> dosages = request.getDosages().stream().map(dosage -> new Dosage(
                 dosage.getUsage(),
                 dosage.getDrugName(),
                 dosage.getStock()
             )).collect(Collectors.toList());
 
-            List<Dosage> savedDosages = this.dosageRepository.saveAll(dosages);
+        List<Dosage> savedDosages = this.dosageRepository.saveAll(dosages);
 
-            Prescription prescription = new Prescription(
-                pharmacy.get(),
-                patient.get(),
-                savedDosages
-            );
-            Long savedPrescriptionId = prescriptionService.createPrescription(prescription);
+        Prescription prescription = new Prescription(
+            pharmacy.get(),
+            patient.get(),
+            savedDosages
+        );
+        Long savedPrescriptionId = prescriptionService.createPrescription(prescription);
+        
+        List<String> insufficientDrugs = this.prescriptionService.tryFullfillPrescriptionById(savedPrescriptionId, false);
+
+        if (insufficientDrugs.isEmpty()) {
             return new ResponseEntity<>(new CreatePrescriptionResponse(true, savedPrescriptionId, null) , HttpStatus.OK);
         } else {
             String failedReason = "Insufficient stock for drugs: " + insufficientDrugs;
             return new ResponseEntity<>(new CreatePrescriptionResponse(false, null, failedReason) , HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    public ResponseEntity<FullfillPrescriptionResponse> fullfillPrescription(Long prescription_id) {
+        Optional<Prescription> prescription = this.prescriptionService.getPrescriptionById(prescription_id);
+        if (prescription.isEmpty()) {
+            String failedReason = "prescription not found for: " + prescription_id;
+            return new ResponseEntity<>(new FullfillPrescriptionResponse(false, failedReason) , HttpStatus.NOT_FOUND);
+        }
+
+        List<String> insufficientDrugs = this.prescriptionService.tryFullfillPrescriptionById(prescription_id, true);
+        if (insufficientDrugs.isEmpty()) {
+            return new ResponseEntity<>(new FullfillPrescriptionResponse(true, null), HttpStatus.OK);
+        } else {
+            String failedReason = "Insufficient stock for drugs: " + insufficientDrugs;
+            return new ResponseEntity<>(new FullfillPrescriptionResponse(false, failedReason), HttpStatus.OK);
         }
     }
 }
