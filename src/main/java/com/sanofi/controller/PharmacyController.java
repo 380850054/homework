@@ -1,8 +1,10 @@
 package com.sanofi.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sanofi.request.PurchaseRequest;
 import com.sanofi.service.PharmacyService;
 
 
@@ -16,9 +18,9 @@ public class PharmacyController {
         this.pharmacyService = pharmacyService;
     }
 
-    @GetMapping("/test-conn")
-    public String index() {
-        return this.pharmacyService.testConn();
+    @PostMapping("/pharmacy/inventories")
+    public String purchase(PurchaseRequest purchaseRequest) {
+        return this.pharmacyService.purchase(purchaseRequest);
     }
 
     @GetMapping("/")

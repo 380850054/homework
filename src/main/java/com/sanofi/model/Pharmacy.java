@@ -1,8 +1,6 @@
 package com.sanofi.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -13,7 +11,6 @@ import jakarta.persistence.Table;
 public class Pharmacy {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -27,7 +24,8 @@ public class Pharmacy {
     public Pharmacy() {
     }
 
-    public Pharmacy(Drug drug, Integer inventory) {
+    public Pharmacy(Long id, Drug drug, Integer inventory) {
+        this.id = id;
         this.drug = drug;
         this.inventory = inventory;
     }

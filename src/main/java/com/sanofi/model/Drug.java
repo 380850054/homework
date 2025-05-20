@@ -70,8 +70,7 @@ public class Drug {
     public Drug() {
     }
 
-    public Drug(Long id, String name, String manufacturer, String batchNumber, String expiryDate) {
-        this.id = id;
+    public Drug(String name, String manufacturer, String batchNumber, String expiryDate) {
         this.name = name;
         this.manufacturer = manufacturer;
         this.batchNumber = batchNumber;
