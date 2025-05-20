@@ -21,4 +21,9 @@ public class HelloController {
         return this.helloService.testConn();
     }
 
+    @GetMapping("/")
+    public String hello() {
+        return "Greetings from Spring Boot!";
+    }
+
 }
