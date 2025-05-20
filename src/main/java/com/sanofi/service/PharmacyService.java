@@ -120,6 +120,18 @@ public class PharmacyService {
             return new ResponseEntity<>(new CreatePrescriptionResponse(false, null, failedReason) , HttpStatus.NOT_FOUND);
         }
 
+        Optional<PharmacyDrugContract> contract = this.pharmacyDrugContractRepository.findByPharmacyId(pharmacy_id);
+        if(contract.isPresent()) {
+            List<String> contractedDrugNames = contract.get().getDrugs().stream().map(drug->drug.getName()).collect(Collectors.toList());
+            
+            boolean contractCheck = request.getDosages().stream().allMatch(dosageRequest -> contractedDrugNames.contains(dosageRequest.getDrugName()));
+
+            if (contractCheck == false) {
+                String failedReason = "Pharmacy drug contract check failed";
+                return new ResponseEntity<>(new CreatePrescriptionResponse(false, null, failedReason) , HttpStatus.BAD_REQUEST);
+            }
+        }
+
         List<Dosage> dosages = request.getDosages().stream().map(dosage -> new Dosage(
                 dosage.getUsage(),
                 dosage.getDrugName(),

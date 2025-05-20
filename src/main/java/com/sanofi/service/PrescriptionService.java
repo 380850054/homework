@@ -1,7 +1,5 @@
 package com.sanofi.service;
 
-import static com.sanofi.util.util.getCurrentDateWithFormat;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +14,7 @@ import com.sanofi.model.Drug;
 import com.sanofi.model.Prescription;
 import com.sanofi.repository.DrugRepository;
 import com.sanofi.repository.PrescriptionRepository;
+import static com.sanofi.util.util.getCurrentDateWithFormat;
 
 import jakarta.transaction.Transactional;
 
@@ -64,7 +63,7 @@ public class PrescriptionService {
         for (Dosage dosage: dosages) {
             double requiredStock = dosage.getStock();
             for (Drug drug: drugs) {
-                if (drug.getName() == dosage.getDrugName()) {
+                if (drug.getName().equals(dosage.getDrugName())) {
                     double existingStock = drug.getStock();
                     if (existingStock > requiredStock) {
                         drug.setStock(existingStock - requiredStock);
@@ -83,7 +82,7 @@ public class PrescriptionService {
         if (persist) {
             List<AuditLog> auditLogs = new ArrayList<>();
 
-            boolean isSuccess = insufficientDrugs.size() == 0;
+            boolean isSuccess = insufficientDrugs.isEmpty();
 
             dosages.forEach(dosage->{
                 auditLogs.add(new AuditLog(
