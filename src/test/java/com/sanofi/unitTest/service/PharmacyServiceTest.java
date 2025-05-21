@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
@@ -98,5 +99,25 @@ public class PharmacyServiceTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(dosageRepository).saveAll(any());
         verify(prescriptionService).createPrescription(any());
+	}
+
+    @Test
+	public void given_non_existing_pharmacy_id_should_response_not_found_when_create_prescription() throws Exception {
+        List<DosageRequest> dosageRequests = new ArrayList<>();
+        dosageRequests.add(new DosageRequest(
+            "cold medicine",
+            6,
+            "1 piece per time, 3 time per day"
+        ));
+        CreatePrescriptionRequest createPrescriptionRequest = new CreatePrescriptionRequest(1L, 1L, dosageRequests);
+
+        when(pharmacyRepository.findById(1L)).thenReturn(Optional.empty());
+
+		ResponseEntity<CreatePrescriptionResponse> response = this.pharmacyService.createPrescription(createPrescriptionRequest);
+
+
+        assertEquals(false, response.getBody().getIs_success());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        verifyNoInteractions(prescriptionService);
 	}
 }
