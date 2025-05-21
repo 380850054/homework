@@ -14,7 +14,7 @@ public class CreatePrescriptionResponse {
         this.failedReason = failedReason;
     }
 
-    public boolean isIs_success() {
+    public boolean getIs_success() {
         return is_success;
     }
 

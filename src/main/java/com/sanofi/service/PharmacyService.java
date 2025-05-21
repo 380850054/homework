@@ -113,7 +113,7 @@ public class PharmacyService {
             return new ResponseEntity<>(new CreatePrescriptionResponse(false, null, failedReason) , HttpStatus.NOT_FOUND);
         }
 
-        Long patient_id = request.getPharmacy_id();
+        Long patient_id = request.getPatient_id();
         Optional<Patient> patient = this.patientRepository.findById(patient_id);
         if (patient.isEmpty()) {
             String failedReason = "Patient not found for: " + patient_id;

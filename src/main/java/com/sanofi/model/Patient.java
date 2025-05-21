@@ -23,6 +23,11 @@ public class Patient {
     public Patient() {
     }
 
+    public Patient(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Patient(String name) {
         this.name = name;
     }
